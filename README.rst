@@ -60,3 +60,30 @@ application and should NOT be used in a production environment.  This is a work 
 other oddities including but-not-limited to verbose code that really should be refactored at some point.
 It was designed for my use-cases only and may not fit your use-cases so feel free to fork this project, provide feedback,
 offer changes etc...
+
+
+Help, Man, Additional Information
+=================================
+
+`Data Read-Me<https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/data/data_read_me.txt>`_
+
+`Help File<https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/docs/help.txt>`_
+
+`Man File<https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/docs/man.txt>`_
+
+`Install from PyPi<https://pypi.python.org/pypi/csvgen>`_
+
+
+How To Install
+==============
+
+Install from PyPi: link above. However, I'm not sure if I have the packaging correct for Pip install. The package
+will install it just tosses import errors if not in the sites directory. I't may just be my local configuration.
+However, it does work if you use pip and after install navigate to the sites directory and use
+"python csvgen ..." from there.
+
+Install from source: Get the source from PyPi or clone from here. Then use setup.py to do an install.
+Remember to use the --record option so you can delete installed files manually without having to guess where
+your operating system placed the files.
+
+

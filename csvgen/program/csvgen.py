@@ -177,7 +177,7 @@ def get_examples(name_list, word_list, suffix_list, place_list, alpha_values):
 def convert_to_bool(string_value):
 
     true_values = ["true", "t", "yes", "y"]
-    false_values = ["false", "f", "no", "no"]
+    false_values = ["false", "f", "no", "n"]
 
     bool_value = False
 
@@ -210,8 +210,6 @@ def write_data(is_file, data):
                 file_output.write(data)
     else:
         pprint(data)
-
-    pass
 
 
 def write_information(args):
