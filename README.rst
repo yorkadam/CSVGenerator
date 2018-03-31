@@ -65,13 +65,13 @@ offer changes etc...
 Help, Man, Additional Information
 =================================
 
-[Data Read-Me][https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/data/data_read_me.txt]
+[Data Read-Me](https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/data/data_read_me.txt "Data Read Me")
 
-[Help File][https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/docs/help.txt]
+[Help File](https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/docs/help.txt "Help File")
 
-[Man File][https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/docs/man.txt]
+[Man File](https://raw.githubusercontent.com/yorkadam/CSVGenerator/master/csvgen/program/docs/man.txt "Man File")
 
-[Install from PyPi][https://pypi.python.org/pypi/csvgen]
+[Install from PyPi](https://pypi.python.org/pypi/csvgen "PyPi")
 
 
 How To Install
