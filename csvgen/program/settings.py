@@ -22,7 +22,8 @@ file_names = {
     "zips": Path(data_path, "zip.codes.txt"),
     "help": Path(document_path, "help.txt"),
     "manual": Path(document_path, "man.txt"),
-    "output": Path(output_path, "output.txt")
+    "output": Path(output_path, "output.txt"),
+    "log": Path(output_path, "log.txt")
 }
 
 display_formats = {

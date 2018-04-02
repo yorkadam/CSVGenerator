@@ -1,3 +1,4 @@
+import os
 import sys
 import argparse
 from program import settings
@@ -9,73 +10,100 @@ from pprint import pprint
 
 # TODO: figure out why --options don't work as expected with argparse
 # TODO: figure how to correctly configure for pip install
-# TODO: Add exception handling and logging
 
 
 def process_work():
 
-    if "-h" in sys.argv or "--help" in sys.argv:
-        write_information("-h")  # Then exit
-    if "-man" in sys.argv or "--manual" in sys.argv:
-        write_information("-man")  # Then exit
-    if "-ex" in sys.argv or "--example" in sys.argv:
-        get_examples(load_name_data(), load_words(),
-                     load_suffixes(use_variants=settings.use_suffix_variants,
-                                   get_variant=get_random_object), load_places(), load_alpha_values(settings.iterations)
-                     )
+    # check for required arguments, if not provided quit
+    if check_arguments(sys.argv) is False:
 
-    # Then exit else process additional arguments
+        print("\nMissing required arguments. Use -h to display command list and arguments.")
+        sys.exit(0)
 
-    parser = argparse.ArgumentParser(description="Creates CSV data for various use-cases", add_help=False)
+    try:
 
-    parser.add_argument("-GetRandomAlpha", "--ra", dest="GetRandomAlpha", help="Gets random alpha data",
-                        required=False, nargs=3)
-    parser.add_argument("-GetRandomNumeric", "--rn", dest="GetRandomNumeric", help="Gets random numeric data",
-                        required=False, nargs=5)
-    parser.add_argument("-GetStaticSequence", "--ss", dest="GetStaticSequence",  help="Gets static sequence data",
-                        required=False, nargs=8)
-    parser.add_argument("-GetRandomSequence", "--rs", dest="GetRandomSequence", help="Gets random sequence data",
-                        required=False, nargs=7)
-    parser.add_argument("-GetAddresses", "--a", dest="GetAddresses", help="Gets address data",
-                        required=False, nargs=5)
+        # If help, man, or examples run then exit
+        if "-h" in sys.argv or "--help" in sys.argv:
+            write_information("-h")  # Then exit
+        if "-man" in sys.argv or "--manual" in sys.argv:
+            write_information("-man")  # Then exit
+        if "-ex" in sys.argv or "--example" in sys.argv:
+            get_examples(load_name_data(), load_words(),
+                         load_suffixes(use_variants=settings.use_suffix_variants,
+                                       get_variant=get_random_object), load_places(), load_alpha_values(settings.iterations)
+                         )
 
-    args = parser.parse_args()
+        # Otherwise process additional arguments
 
-    if args.GetRandomAlpha is not None:
+        parser = argparse.ArgumentParser(description="Creates CSV data for various use-cases", add_help=False)
 
-        is_file, number_of_values, delimiter = args.GetRandomAlpha
-        data = get_random_alpha(load_words(), int(number_of_values), delimiter)
-        write_data(is_file, data)
+        parser.add_argument("-GetRandomAlpha", "--ra", dest="GetRandomAlpha", help="Gets random alpha data",
+                            required=False, nargs=3)
+        parser.add_argument("-GetRandomNumeric", "--rn", dest="GetRandomNumeric", help="Gets random numeric data",
+                            required=False, nargs=5)
+        parser.add_argument("-GetStaticSequence", "--ss", dest="GetStaticSequence",  help="Gets static sequence data",
+                            required=False, nargs=8)
+        parser.add_argument("-GetRandomSequence", "--rs", dest="GetRandomSequence", help="Gets random sequence data",
+                            required=False, nargs=7)
+        parser.add_argument("-GetAddresses", "--a", dest="GetAddresses", help="Gets address data",
+                            required=False, nargs=5)
 
-    if args.GetRandomNumeric is not None:
+        args = parser.parse_args()
 
-        is_file, number_of_values, delimiter, start, end = args.GetRandomNumeric
-        data = get_random_numeric(int(number_of_values), delimiter, start, end)
-        write_data(is_file, data)
+        if args.GetRandomAlpha is not None:
 
-    if args.GetStaticSequence is not None:
+            is_file, number_of_values, delimiter = args.GetRandomAlpha
+            data = get_random_alpha(load_words(), int(number_of_values), delimiter)
+            write_data(is_file, data)
 
-        is_file, identifier, is_prefix, start, end, delimiter, joiner, is_alpha = args.GetStaticSequence
-        data = get_static_sequence(identifier, convert_to_bool(is_prefix), int(start), int(end), delimiter, joiner,
-                                   convert_to_bool(is_alpha), load_alpha_values(settings.iterations))
-        write_data(is_file, data)
+        if args.GetRandomNumeric is not None:
 
-    if args.GetRandomSequence is not None:
+            is_file, number_of_values, delimiter, start, end = args.GetRandomNumeric
+            data = get_random_numeric(int(number_of_values), delimiter, start, end)
+            write_data(is_file, data)
 
-        is_file, is_prefix, start, end, delimiter, joiner, is_alpha = args.GetRandomSequence
-        data = get_random_sequence(convert_to_bool(is_prefix), int(start), int(end), delimiter, joiner,
-                                   convert_to_bool(is_alpha), load_words(), load_alpha_values(settings.iterations))
-        write_data(is_file, data)
+        if args.GetStaticSequence is not None:
 
-    if args.GetAddresses is not None:
+            is_file, identifier, is_prefix, start, end, delimiter, joiner, is_alpha = args.GetStaticSequence
+            data = get_static_sequence(identifier, convert_to_bool(is_prefix), int(start), int(end), delimiter, joiner,
+                                       convert_to_bool(is_alpha), load_alpha_values(settings.iterations))
+            write_data(is_file, data)
 
-        is_file, is_filtered, length, address_type, include_header = args.GetAddresses
-        addresses = get_addresses(convert_to_bool(is_filtered), int(length), load_name_data(), load_words(),
-                                  load_suffixes(use_variants=settings.use_suffix_variants,
-                                                get_variant=get_random_object), load_places())
+        if args.GetRandomSequence is not None:
 
-        data = generate_address_csv(addresses, address_type, convert_to_bool(include_header), settings)
-        write_data(is_file, data)
+            is_file, is_prefix, start, end, delimiter, joiner, is_alpha = args.GetRandomSequence
+            data = get_random_sequence(convert_to_bool(is_prefix), int(start), int(end), delimiter, joiner,
+                                       convert_to_bool(is_alpha), load_words(), load_alpha_values(settings.iterations))
+            write_data(is_file, data)
+
+        if args.GetAddresses is not None:
+
+            is_file, is_filtered, length, address_type, include_header = args.GetAddresses
+            addresses = get_addresses(convert_to_bool(is_filtered), int(length), load_name_data(), load_words(),
+                                      load_suffixes(use_variants=settings.use_suffix_variants,
+                                                    get_variant=get_random_object), load_places())
+
+            data = generate_address_csv(addresses, address_type, convert_to_bool(include_header), settings)
+            write_data(is_file, data)
+
+    except (OSError, FileNotFoundError, PermissionError, RuntimeError) as exception:
+
+        print("\nAn error occurred: Please see the log in the output directory for more information.")
+        log_error(exception)
+
+
+def check_arguments(args):
+    # Check if expected arguments were passed and if not let the user know.
+    all_arguments = ["-h", "--h", "-m", "--manual", "-ex", "--example",
+                     "-GetRandomAlpha", "-GetRandomNumeric", "-GetStaticSequence",
+                     "-GetRandomSequence", "-GetAddresses"]
+    is_required = False
+
+    for arg in args:
+        if arg in all_arguments:
+            is_required = True
+
+    return is_required
 
 
 def get_random_alpha(word_list, number_of_values, delimiter):
@@ -227,3 +255,24 @@ def write_information(args):
     sys.exit(0)
 
 
+def log_error(error_content):
+
+    try:
+        # Python logging module not required, but may be implemented in the future.
+        # if we can't write to the error log then write to screen
+
+        if os.path.exists(settings.file_names["log"]):
+            write_mode = 'a'
+        else:
+            write_mode = 'w'
+
+        with open(settings.file_names["log"], mode=write_mode) as log:
+            log.write(str(error_content))
+
+    except PermissionError:
+
+        print(' '.join(("\nPermission Error: Cannot write to log.",
+                        "\nPath:", settings.file_names["log"])))
+    except OSError:
+
+        print("\nAn unknown error occurred while trying to write to the error log.")
